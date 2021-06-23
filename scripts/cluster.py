@@ -74,14 +74,6 @@ if __name__ == '__main__':
     detected_objects_pub = rospy.Publisher('/detected_objects', DetectedObjectsArray , queue_size=1)
     object_markers_pub = rospy.Publisher('/object_markers', Marker , queue_size=1)
 
-
-    # Load Model From disk
-    model = pickle.load(open('model.sav', 'rb'))
-    clf = model['classifier']
-    encoder = LabelEncoder()
-    encoder.classes_ = model['classes']
-    scaler = model['scaler']
-
     # Initialize color_list
     get_color_list.color_list = []
 
