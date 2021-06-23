@@ -205,3 +205,26 @@ def get_color_list(cluster_count):
         for i in xrange(len(get_color_list.color_list), cluster_count):
             get_color_list.color_list.append(random_color_gen())
     return get_color_list.color_list
+
+if __name__ == '__main__':
+
+    rospy.init_node('obj_recognition_node')
+
+    # Create Subscribers
+    sub = rospy.Subscriber('obj_recognition/pcl_clusters' , SegmentedClustersArray, pcl_callback )
+    detected_objects_pub = rospy.Publisher('/detected_objects', DetectedObjectsArray , queue_size=1)
+    object_markers_pub = rospy.Publisher('/object_markers', Marker , queue_size=1)
+    semantic_map= rospy.Publisher('semantic_map' ,semantic_map_array, queue_size=1)
+
+    # Load Model From disk
+    model = pickle.load(open('model.sav', 'rb'))
+    clf = model['classifier']
+    encoder = LabelEncoder()
+    encoder.classes_ = model['classes']
+    scaler = model['scaler']
+
+    # Initialize color_list
+    get_color_list.color_list = []
+
+    while not rospy.is_shutdown():
+        rospy.spin()
